@@ -11,12 +11,12 @@ LUFA_PATH   ?= $(HOME)/src/avr/lufa/lufa-latest/LUFA
 Then cd to the path where the sources of this repository are located and simply run:
 
 ```
-make
+$ make
 ```
 
 To burn the new firmware you can use your favorite tool. If the microcontroller has a DFU bootloader burned, you can enter DFU mode (e.g. keeping the pushbutton on the programmer pressed while plugging the USB cable) and burn the firmware by running:
 ```
-make dfu
+$ make dfu
 ```
 
 Once flashed, you can use [mw-mdma-cli](https://github.com/doragasu/mw-mdma-cli) tool to to talk to the MegaWiFi Programmer.
