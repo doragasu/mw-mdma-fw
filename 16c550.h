@@ -16,14 +16,19 @@
 #include "cart_if.h"
 
 /// Clock applied to 16C550 chip (same as avr chip, 8 MHz)
-#define UART_CLK		14745600LU
+//#define UART_CLK		14745600LU
+#define UART_CLK		24000000LU
 
 /// Desired baud rate.
 /// \note 500 kbps tested under Linux with Minicom and works reliably.
 /// ESP8266 is supposed to auto-baud, but it's untested with this speed.
 //#define UART_BR			460800LU
-#define UART_BR			230400LU
+//#define UART_BR			230400LU
 //#define UART_BR			38400LU
+//#define UART_BR			250000LU
+#define UART_BR			500000LU
+//#define UART_BR			750000LU
+//#define UART_BR				1500000LU	// Fails with 24 MHz XTAL!
 
 /// Lenght of the UART TX and RX FIFOs in characters
 #define UART_FIFO_LENGTH	16

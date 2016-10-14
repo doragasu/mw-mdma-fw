@@ -18,7 +18,7 @@
  *        function in the module, and after calling CifInit().
  ****************************************************************************/
 void WiFiInit(void) {
-	// Initializa UART
+	// Initialize UART
 	SlipInit();
 	// Set the module in RESET, and prepare for starting bootloader.
 	WiFiReset();

@@ -280,7 +280,6 @@ uint16_t SfWiFiCmdProc(uint8_t event, uint8_t data[]) {
 				case SF_WIFI_CTRL_SYNC:
 					// Send the SYNC frame and try reading the response
 					// until success or too many attemps.
-					step = data[2];
 					for (step = data[2]; step; step--) {
 						UartFlush();
 						SlipFrameSendPoll((uint8_t*)syncFrame,
