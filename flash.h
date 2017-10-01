@@ -151,7 +151,7 @@ void FlashIdle(void);
  *
  * \note Do not mistake this function with the program ones.
  ****************************************************************************/
-inline void FlashWrite(uint32_t addr, uint16_t data) {
+static inline void FlashWrite(uint32_t addr, uint16_t data) {
 	// Put address on the bus
 	CIF_ADDRL_PORT = addr;
 	CIF_ADDRH_PORT = addr>>8;
@@ -182,7 +182,7 @@ inline void FlashWrite(uint32_t addr, uint16_t data) {
  *
  * \return Readed word.
  ****************************************************************************/
-inline uint16_t FlashRead(uint32_t addr) {
+static inline uint16_t FlashRead(uint32_t addr) {
 	uint16_t data;
 
 	// Put address on the bus

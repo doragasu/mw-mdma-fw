@@ -26,6 +26,7 @@
 //#define UART_BR			230400LU
 //#define UART_BR			38400LU
 //#define UART_BR			250000LU
+//#define UART_BR			115200LU
 #define UART_BR			500000LU
 //#define UART_BR			750000LU
 //#define UART_BR				1500000LU	// Fails with 24 MHz XTAL!
@@ -83,7 +84,7 @@
  *            bits are used.
  * \param[in] data Data to write to addr address (8 bits width).
  ****************************************************************************/
-inline void UartWrite(uint8_t addr, uint8_t data) {
+static inline void UartWrite(uint8_t addr, uint8_t data) {
 	// Generate address strobe and put address on the bus
 	CIF_CLR__AS;
 	CIF_ADDRL_PORT = addr;
@@ -112,7 +113,7 @@ inline void UartWrite(uint8_t addr, uint8_t data) {
  *
  * \return Readed word.
  ****************************************************************************/
-inline uint8_t UartRead(uint8_t addr) {
+static inline uint8_t UartRead(uint8_t addr) {
 	uint8_t data;
 
 	// Generate address strobe and put address on the bus

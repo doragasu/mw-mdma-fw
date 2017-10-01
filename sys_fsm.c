@@ -556,7 +556,9 @@ void SfFsmCycle(uint8_t evt) {
 			// Get data from USB endpoint
 			SfDataRecv(buf);
 			// If status == SF_READY, parse command. Else reply with error.
-			if (si.s == SF_READY) {
+			// There is an exception with the bootloader command, that must
+			// be always honored
+			if ((si.s == SF_READY) || (MDMA_CMD(buf) == MDMA_BOOTLOADER)) {
 				repLen = SfCmdProc(buf);
 			} else {
 				buf[0] = MDMA_ERR;
