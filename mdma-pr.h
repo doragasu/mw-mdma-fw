@@ -27,6 +27,7 @@
 #define MDMA_WIFI_CMD	   10	///< Command forwarded to the WiFi chip.
 #define MDMA_WIFI_CMD_LONG 11	///< Long command forwarded to the WiFi chip.
 #define MDMA_WIFI_CTRL	   12	///< WiFi chip control action (using GPIO).
+#define MDMA_RANGE_ERASE   13	///< Erase a memory range of the flash chip
 #define MDMA_ERR		  255	///< Used to report ERROR during replies.
 /** \} */
 
@@ -59,9 +60,9 @@
 /// Obtains command from a data frame
 #define MDMA_CMD(data)		(data[0])
 /// Obtains address from a flash read, write or sector erase command
-#define MDMA_ADDR(data)		MDMA_3BYTES_AT(data, MDMA_ADDR_OFF)
+#define MDMA_ADDR(data)			MDMA_3BYTES_AT(data, MDMA_ADDR_OFF)
 /// Obtains length from a data read or write command
-#define MDMA_LENGTH(data)	MDMA_WORD_AT(data, MDMA_LENGTH_OFF)
+#define MDMA_LENGTH(data)		MDMA_WORD_AT(data, MDMA_LENGTH_OFF)
 
 #define MDMA_SET_ADDR(data, addr)	do {							\
 		(data)[MDMA_ADDR_OFF] = (addr) & 0xFF; 						\

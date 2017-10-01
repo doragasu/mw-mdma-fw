@@ -16,6 +16,30 @@
 /// \TODO Support several flash chips
 #define FLASH_SA_GET(addr)		(addr)
 
+/// Number of shifts for addresses of saddr array
+#define FLASH_SADDR_SHIFT	7
+
+/// Top address of the Flash chip, plus 1, shifted FLASH_SADDR_SHIFT times.
+#define FLASH_SADDR_MAX		(FLASH_CHIP_LENGTH>>FLASH_SADDR_SHIFT)
+
+/// Sector word addresses, shifted FLASH_SADDR_SHIFTS times to the right
+/// Note not all the sectors are the same length (depending on top boot
+/// or bottom boot flash configuration).
+const static uint16_t saddr[] = {
+	0x0000, 0x0100, 0x0200, 0x0300, 0x0400, 0x0500, 0x0600, 0x0700,
+	0x0800, 0x0900, 0x0A00, 0x0B00, 0x0C00, 0x0D00, 0x0E00, 0x0F00,
+	0x1000, 0x1100, 0x1200, 0x1300, 0x1400, 0x1500, 0x1600, 0x1700,
+	0x1800, 0x1900, 0x1A00, 0x1B00, 0x1C00, 0x1D00, 0x1E00, 0x1F00,
+	0x2000, 0x2100, 0x2200, 0x2300, 0x2400, 0x2500, 0x2600, 0x2700,
+	0x2800, 0x2900, 0x2A00, 0x2B00, 0x2C00, 0x2D00, 0x2E00, 0x2F00,
+	0x3000, 0x3100, 0x3200, 0x3300, 0x3400, 0x3500, 0x3600, 0x3700,
+	0x3800, 0x3900, 0x3A00, 0x3B00, 0x3C00, 0x3D00, 0x3E00, 0x3F00,
+	0x3F20, 0x3F40, 0x3F60, 0x3F80, 0x3FA0, 0x3FC0, 0x3FE0
+};
+
+/// Returns the sector number corresponding to address input
+#define FLASH_NSECT		(sizeof(saddr) / sizeof(uint16_t))
+
 /************************************************************************//**
  * \brief Polls flash chip after a program operation, and returns when the
  * program operation ends, or when there is an error.
@@ -255,4 +279,42 @@ uint8_t FlashSectErase(uint32_t addr) {
 	// Poll until erase complete
 	return FlashErasePoll(addr);
 }
+
+/************************************************************************//**
+ * Erases a flash memory range.
+ *
+ * \param[in] addr Address base for the range to erase.
+ * \param[in] len  Length of the range to erase
+ * \return '0' if the erase operation completed successfully, '1' otherwise.
+ *
+ * \warning Function erases the minimum memory range CONTAINING the
+ * specified range. Due to the granularity of the flash sectors, it can (and
+ * most likely will) erase more memory than requested. This is expected
+ * behaviour, and programmer must be aware of this.
+ ****************************************************************************/
+uint8_t FlashRangeErase(uint32_t addr, uint32_t len) {
+	// Index
+	uint8_t i, j;
+	// Shifted address to compare with 
+	uint16_t caddr = addr>>FLASH_SADDR_SHIFT;
+	uint16_t clen = (len - 1)>>FLASH_SADDR_SHIFT;
+
+	if (!len) return 0;
+	if ((addr + len) >= (FLASH_SADDR_MAX<<FLASH_SADDR_SHIFT)) return 1;
+
+	// Find sector containing the initial address
+	for (i = FLASH_NSECT - 1; caddr < saddr[i]; i--);
+	// Find sector containing the end address
+	for (j = FLASH_NSECT - 1; (caddr + clen) < saddr[j]; j--);
+
+	for (; i <= j; i++) {
+		if (!FlashSectErase(((uint32_t)(saddr[i]))<<FLASH_SADDR_SHIFT)) {
+			while(1);
+			return 2;
+		}
+	}
+
+	return 0;
+}
+
 

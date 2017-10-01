@@ -332,6 +332,7 @@ uint16_t SfCmdProc(uint8_t data[]) {
 	uint16_t length;
 	uint8_t toWrite, written;
 	uint16_t step;
+	uint32_t dwLength;
 
 	switch (MDMA_CMD(data)) {
 		case MDMA_MANID_GET:	// Flash manufacturer ID
@@ -448,6 +449,15 @@ uint16_t SfCmdProc(uint8_t data[]) {
 		case MDMA_WIFI_CMD_LONG:
 		case MDMA_WIFI_CTRL:
 			repLen = SfWiFiCmdProc(SF_EVT_DIN, data);
+			break;
+
+		case MDMA_RANGE_ERASE:
+			repLen = 1;
+			// Unpack address and length
+			addr = MDMA_3BYTES_AT(data, 1);
+			dwLength = MDMA_DWORD_AT(data, 4);
+			// Issue erase command
+			data[0] = FlashRangeErase(addr, dwLength)?MDMA_ERR:MDMA_OK;
 			break;
 
 		default:

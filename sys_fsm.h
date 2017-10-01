@@ -51,6 +51,7 @@
  *     * Output value from writes (from port A to F, 6 bytes).
  *   + Reply: OK plus data:
  *     * Data readed from requested pins (from port A to F, 6 bytes).
+ *   + TODO: Update this list
  *
  * \warning All words and dwords sent, must use LITTLE ENDIAN order, \b excepting the data to be flashed to the chip, that must be BIG ENDIAN.
  */

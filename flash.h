@@ -14,6 +14,9 @@
 #include <avr/cpufunc.h>
 #include "cart_if.h"
 
+/// Flash chip length: 4 MiB
+#define FLASH_CHIP_LENGTH	(4LU*1024LU*1024LU)
+
 /** \addtogroup flash FlashCmdData Data used to perform different flash commands.
  * This data depends on the flash chip and on the mode (x8/x16) used.
  * \{
@@ -349,6 +352,20 @@ uint8_t FlashDataPoll(uint32_t addr, uint16_t data);
  * \return 0 if OK, 1 if error during program operation.
  ****************************************************************************/
 uint8_t FlashErasePoll(uint32_t addr);
+
+/************************************************************************//**
+ * Erases a flash memory range.
+ *
+ * \param[in] addr Address base for the range to erase.
+ * \param[in] len  Length of the range to erase
+ * \return '0' if the erase operation completed successfully, '1' otherwise.
+ *
+ * \warning Function erases the minimum memory range CONTAINING the
+ * specified range. Due to the granularity of the flash sectors, it can (and
+ * most likely will) erase more memory than requested. This is expected
+ * behaviour, and programmer must be aware of this.
+ ****************************************************************************/
+uint8_t FlashRangeErase(uint32_t addr, uint32_t len);
 
 #ifdef __cplusplus
 }
