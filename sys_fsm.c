@@ -221,6 +221,8 @@ uint16_t SfWiFiCmdProc(uint8_t event, uint8_t data[]) {
 				if (!SlipFrameRecvPoll(data, VENDOR_O_EPSIZE, &len,
 							SF_WIFI_CMD_TOUT_CYCLES)) {
 					if (1 == data[0] && data[1] == cmd) {
+						/// \todo FIXME should also check status and error
+						/// fields (offsets 8 and 9).
 						data[0] = MDMA_OK;
 						return len;
 					}
@@ -294,6 +296,8 @@ uint16_t SfWiFiCmdProc(uint8_t event, uint8_t data[]) {
 								return 1;
 							}
 						}
+						// Avoid USB timing out
+						USB_USBTask();
 					}
 					// Retries completed before sync correct
 					data[0] = MDMA_ERR;

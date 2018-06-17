@@ -97,7 +97,8 @@ typedef enum {
 #define SF_WIFI_TOUT_CYCLES_MAX		UINT16_MAX
 
 /// Number of UART poll cycles for WiFi command operations.
-#define SF_WIFI_CMD_TOUT_CYCLES		SF_WIFI_TOUT_CYCLES_MAX
+//#define SF_WIFI_CMD_TOUT_CYCLES		SF_WIFI_TOUT_CYCLES_MAX
+#define SF_WIFI_CMD_TOUT_CYCLES		10000
 
 /** \addtogroup sys_fsm SfSwData Pushbutton data interpretation masks.
  *  \{ */

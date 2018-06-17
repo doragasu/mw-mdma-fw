@@ -26,8 +26,8 @@
 //#define UART_BR			230400LU
 //#define UART_BR			38400LU
 //#define UART_BR			250000LU
-//#define UART_BR			115200LU
-#define UART_BR			500000LU
+#define UART_BR			115200LU
+//#define UART_BR			500000LU
 //#define UART_BR			750000LU
 //#define UART_BR				1500000LU	// Fails with 24 MHz XTAL!
 
