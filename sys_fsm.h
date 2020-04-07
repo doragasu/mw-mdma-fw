@@ -114,6 +114,7 @@ typedef enum {
 	SF_IDLE,		///< Idle state, cartridge not inserted
 	SF_STAB_WAIT,	///< Wait until cart/USB stabilizes
 	SF_CART_INIT,	///< Initialize cartridge (obtain cart info)
+	SF_WARN,	///< Warn about cart init error
 	SF_READY,		///< System ready to parse host commands
 	SF_MANID_GET,	///< Obtaining manufacturer ID
 	SF_DEVID_GET,	///< Obtaining device ID
@@ -156,6 +157,8 @@ typedef struct {
 	SfFlags f;		///< System status flags
 	SfFlashData fc;	///< Flash chip data
 	uint8_t sw;		///< Switch (pushbutton) status
+	uint8_t cart_err;
+	uint8_t cycle;
 } SfInstance;
 /** \} */
 

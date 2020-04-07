@@ -21,7 +21,9 @@
 
 /// Command and data bytes for the ESP8266 SYNC command.
 const char syncFrame[] = {
+	// 0, cmd, data_len, data_len (16b), chk (32b)
 	0x00, 0x08, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00,
+	// data
 	0x07, 0x07, 0x12, 0x20,
 	0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 
 	0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 
@@ -489,7 +491,7 @@ void SfCartInit(void) {
 	// Wait 500 ns
 	_NOP();_NOP();_NOP();_NOP();
 	// Initialize UART
-	UartInit();
+	si.cart_err = UartInit();
 }
 
 /************************************************************************//**
@@ -524,15 +526,41 @@ void SfFsmCycle(uint8_t evt) {
 			if (si.s == SF_STAB_WAIT) {
 				LEDs_TurnOffLEDs(LEDS_LED2);
 				// Check if cart is finally inserted and USB ready
-				if (si.f.cart_in && si.f.usb_ready) SfCartInit();
-				else SfCartRemove();
+				if (si.f.cart_in && si.f.usb_ready) {
+					SfCartInit();
+				} else {
+					SfCartRemove();
+				}
 			} else if (si.s == SF_CART_INIT) {
 				// Reset finished, cart should be ready to accept commands.
 				// Obtain IDs.
 				si.fc.manId = FlashGetManId();
 				FlashGetDevId(si.fc.devId);
-				// Finally jump to ready state
-				si.s = SF_READY;
+				// If we got cart init error, blink LEDs as warning. else
+				// go to READY state
+				if (si.cart_err) {
+					si.s = SF_WARN;
+					si.cycle = 8;
+					Timer1Config(TimerMsToCount(125));
+					Timer1Start();
+					LEDs_TurnOffLEDs(LEDS_ALL_LEDS);
+				} else {
+					si.s = SF_READY;
+				}
+			} else if (SF_WARN == si.s) {
+				si.cycle--;
+				if (si.cycle & 1) {
+					LEDs_TurnOnLEDs(LEDS_ALL_LEDS);
+				} else {
+					LEDs_TurnOffLEDs(LEDS_ALL_LEDS);
+				}
+				if (0 == si.cycle) {
+					LEDs_TurnOnLEDs(LEDS_LED1);
+					si.s = SF_READY;
+				} else {
+					Timer1Config(TimerMsToCount(125));
+					Timer1Start();
+				}
 			} else if (SF_WIFI_MOD  == si.s) {
 				// TODO: Call espcomm FSM or remove this block?
 			}
@@ -557,7 +585,9 @@ void SfFsmCycle(uint8_t evt) {
 		case SF_EVT_USB_ATT:		// USB attached and enumerated
 			si.f.usb_ready = TRUE;
 			// Check if cart is inserted and we are IDLE.
-			if (si.f.cart_in && si.s == SF_IDLE) SfCartInit();
+			if (si.f.cart_in && si.s == SF_IDLE) {
+				SfCartInit();
+			}
 			break;
 		case SF_EVT_USB_DET:		// USB detached
 		case SF_EVT_USB_ERR:		// Error on USB interface

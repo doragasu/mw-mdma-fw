@@ -26,8 +26,8 @@
 //#define UART_BR			230400LU
 //#define UART_BR			38400LU
 //#define UART_BR			250000LU
-#define UART_BR			115200LU
-//#define UART_BR			500000LU
+//#define UART_BR			115200LU
+#define UART_BR			500000LU
 //#define UART_BR			750000LU
 //#define UART_BR				1500000LU	// Fails with 24 MHz XTAL!
 
@@ -140,8 +140,10 @@ static inline uint8_t UartRead(uint8_t addr) {
  * \brief Initializes the driver. The baud rate is set to UART_BR, and the
  *        UART FIFOs are enabled. This function must be called before using
  *        any other API call.
+ *
+ * \return 1 if scratchpad tests failed, 0 otherwise.
  ****************************************************************************/
-void UartInit(void);
+int8_t UartInit(void);
 
 /************************************************************************//**
  * \brief Checks if UART transmit register/FIFO is ready. In FIFO mode, up to
