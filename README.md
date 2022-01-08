@@ -1,3 +1,7 @@
+# WARNING: THIS PROJECT HAS MOVED
+
+You can find the most recent version at the [mw-mdma-fw GitLab project page](https://gitlab.com/doragasu/mw-mdma-fw). This repository will be kept as is, and will not be updated anymore.
+
 # mw-mdma-fw
 Firmare for the MegaWiFi Programmer. Firmware produced by these sources must be programmed to the microcontroller inside a MegaWiFi Programmer for it to work properly. It is prepared to be used in conjunction with `mw-mdma-bl` bootloader (a LUFA DFU based bootloader) to be able to boot from the bootloader, and enter bootloader mode for firmware download.
 
